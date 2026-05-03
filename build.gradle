@@ -7,7 +7,18 @@ plugins {
   id 'org.cyclonedx.bom' version '3.2.0'
   id 'io.spring.javaformat' version '0.0.47'
   id "io.spring.nohttp" version "0.0.11"
+  id 'pl.allegro.tech.build.axion-release' version '1.21.1'
 }
+//
+scmVersion {
+    tag {
+        prefix = ''
+    }
+}
+
+project.version = scmVersion.version
+
+//
 
 gradle.startParameter.excludedTaskNames += [ "checkFormatAot", "checkFormatAotTest" ]
 
@@ -57,6 +68,14 @@ dependencies {
   checkstyle "io.spring.javaformat:spring-javaformat-checkstyle:${springJavaformatCheckstyleVersion}"
   checkstyle "com.puppycrawl.tools:checkstyle:${checkstyleVersion}"
 }
+
+//custom task
+tasks.register('openTestReport', Exec) {
+    dependsOn build
+
+    commandLine 'open', "$buildDir/reports/tests/test/index.html"
+}
+//custom task ends
 
 tasks.named('test') {
   useJUnitPlatform()
